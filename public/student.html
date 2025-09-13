@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Student Portal</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container card small">
+    <h1>Student Check-in</h1>
+    <div id="details">Loading...</div>
+  </div>
+
+  <script>
+    const id = window.location.pathname.split("/").pop();
+    async function loadStudent(){
+      const res = await fetch(`/api/student/${id}`);
+      const j = await res.json();
+      const div = document.getElementById("details");
+      if(!j.success){ div.innerHTML="❌ Not found"; return; }
+
+      const s = j.student;
+      div.innerHTML = `<p><b>${s.name}</b><br>${s.email}<br>ID: ${s.id}</p>
+        <p>Status: ${s.attendance ? "✅ Present" : "❌ Absent"}</p>
+        ${!s.attendance ? `<button onclick="markAttendance()">Mark Attendance</button>` : ""}`;
+    }
+    async function markAttendance(){
+      const res = await fetch(`/api/attendance/${id}`,{method:"POST"});
+      const j = await res.json();
+      if(j.success){ alert("✅ Attendance marked at "+j.timestamp); }
+      else { alert("⚠ "+j.message); }
+      loadStudent();
+    }
+    loadStudent();
+  </script>
+</body>
+</html>

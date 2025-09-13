@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <div style="text-align:right;margin-bottom:15px">
+      <a href="/api/export"><button>⬇ Download Excel</button></a>
+    </div>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Timestamp</th></tr>
+      </thead>
+      <tbody id="studentTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadStudents(){
+      const res = await fetch('/api/students');
+      const j = await res.json();
+      const tb = document.getElementById('studentTable');
+      tb.innerHTML = '';
+      if(j.success){
+        j.students.forEach(s=>{
+          tb.innerHTML += `<tr>
+            <td>${s.id}</td>
+            <td>${s.name}</td>
+            <td>${s.email}</td>
+            <td>${s.attendance ? '✅ Present' : '❌ Absent'}</td>
+            <td>${s.timestamp || '-'}</td>
+          </tr>`;
+        });
+      }
+    }
+    setInterval(loadStudents,2000); // live refresh
+    loadStudents();
+  </script>
+</body>
+</html>

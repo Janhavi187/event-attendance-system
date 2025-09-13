@@ -1,0 +1,217 @@
+/* General Reset & Body */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1f2833, #0b0c10); /* Dark, sleek gradient */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px;
+  color: #c5c6c7; /* Light gray for text */
+  animation: bodyFade 1s ease-in-out;
+  perspective: 1200px;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(31, 40, 49, 0.8); /* Semi-transparent dark background */
+  padding: 25px 30px;
+  border-radius: 20px;
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.7s ease-out;
+  transform-style: preserve-3d;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  color: #66fcf1; /* Vibrant cyan */
+  text-shadow: 0 0 15px rgba(102, 252, 241, 0.6);
+  animation: glow 1.5s infinite alternate;
+  letter-spacing: 2px;
+}
+
+/* Form */
+form label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+  color: #45a29e; /* Muted cyan */
+  text-transform: uppercase;
+}
+
+form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #45a29e;
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+  background: #0b0c10;
+  color: #66fcf1;
+  transition: 0.3s ease;
+}
+
+form input:focus {
+  border-color: #66fcf1;
+  box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+  transform: scale(1.02) translateZ(10px);
+}
+
+/* Buttons */
+button {
+  display: inline-block;
+  background: #66fcf1;
+  color: #1f2833;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: 0.4s cubic-bezier(.17,.84,.44,1);
+  animation: buttonPop 1s ease-in;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: #45a29e;
+  transform: scale(1.05) translateZ(10px);
+  color: #c5c6c7;
+}
+
+button:active {
+  transform: scale(0.98) translateZ(0);
+}
+
+/* Cards */
+.card {
+  background: #1f2833;
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  animation: cardFade 0.7s ease-in;
+  transform-style: preserve-3d;
+  transition: 0.4s transform ease-out;
+}
+
+.card:hover {
+  transform: rotateX(3deg) rotateY(3deg) translateZ(15px);
+}
+
+.card.small {
+  max-width: 500px;
+  margin: auto;
+}
+
+/* Alerts */
+.warn {
+  color: #f77f00;
+  margin-top: 15px;
+  font-weight: bold;
+  animation: alertPulse 1s infinite alternate;
+}
+
+.success {
+  color: #2a9d8f;
+  margin-top: 15px;
+  font-weight: bold;
+  animation: alertPulse 1s infinite alternate;
+}
+
+/* QR Code Image */
+#qrImg {
+  width: 200px;
+  height: 200px;
+  border: 5px solid #66fcf1;
+  border-radius: 15px;
+  background: #fff;
+  padding: 10px;
+  transition: transform 0.4s ease-out;
+}
+
+#qrImg:hover {
+  transform: rotateY(15deg) scale(1.1) translateZ(10px);
+}
+
+/* Table (Admin) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: tableFade 0.8s ease-in;
+  transform-style: preserve-3d;
+}
+
+table th, table td {
+  padding: 15px;
+  text-align: left;
+  background: #1f2833;
+  color: #c5c6c7;
+  border: 1px solid #45a29e;
+  transform: translateZ(0);
+}
+
+table th {
+  background: #45a29e;
+  color: #0b0c10;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+table tr:hover td {
+  background: #45a29e;
+  color: #0b0c10;
+  transform: translateZ(5px);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-30px) rotateX(10deg); }
+  to { opacity: 1; transform: translateY(0) rotateX(0); }
+}
+
+@keyframes bodyFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #66fcf1; }
+  to { text-shadow: 0 0 20px #66fcf1; }
+}
+
+@keyframes buttonPop {
+  0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cardFade {
+  from { opacity: 0; transform: scale(0.95) rotateY(-10deg); }
+  to { opacity: 1; transform: scale(1) rotateY(0); }
+}
+
+@keyframes alertPulse {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+@keyframes tableFade {
+  from { opacity: 0; transform: translateY(15px) rotateX(10deg); }
+  to { opacity: 1; transform: translateY(0) rotateX(0); }
+}

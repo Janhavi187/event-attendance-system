@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>QR Scanner</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Scanner — Mark Attendance</h1>
+  <div class="card">
+    <div id="reader"></div>
+    <div id="scanMsg"></div>
+
+    <div style="margin-top:12px">
+      <label for="manualId">Manual Registration ID</label>
+      <input id="manualId" />
+      <button id="manualBtn">Mark Attendance Manually</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const scanMsg=document.getElementById('scanMsg');
+function showMsg(msg,cls=''){ scanMsg.innerHTML=`<div class="${cls}">${msg}</div>`; }
+async function checkin(payload){
+  try{ const res=await fetch('/api/checkin',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+        const j=await res.json();
+        if(j.success) showMsg(`✅ ${j.message}${j.timestamp?' — '+j.timestamp:''}`,'success');
+        else showMsg(`⚠️ ${j.message}${j.timestamp?' — '+j.timestamp:''}`,'warn');
+  } catch(e){ showMsg('Error contacting server: '+e,'warn'); }
+}
+document.getElementById('manualBtn').addEventListener('click',()=>{
+  const id=document.getElementById('manualId').value.trim();
+  if(!id) return alert('Enter Registration ID');
+  checkin({ id });
+});
+
+function onScanSuccess(decodedText,decodedResult){
+  showMsg(`Scanned: ${decodedText} — marking...`);
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>checkin({ id:decodedText, lat:pos.coords.latitude, lng:pos.coords.longitude }),
+      ()=>checkin({ id:decodedText }), { timeout:5000 });
+  } else checkin({ id:decodedText });
+
+  html5QrcodeScanner.clear().then(()=>setTimeout(()=>html5QrcodeScanner.render(onScanSuccess),1500))
+  .catch(()=>setTimeout(()=>html5QrcodeScanner.render(onScanSuccess),1500));
+}
+
+const html5QrcodeScanner = new Html5QrcodeScanner("reader",{ fps:10, qrbox:{ width:250,height:250 }},false);
+html5QrcodeScanner.render(onScanSuccess);
+</script>
+</body>
+</html>

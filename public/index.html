@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Event Registration</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="container">
+  <h1>Event Registration</h1>
+  <form id="regForm" class="card small">
+    <label>Name</label>
+    <input id="name" required />
+    <label>Email</label>
+    <input id="email" type="email" required />
+    <label>Registration ID (optional)</label>
+    <input id="regId" />
+    <button type="submit">Register & Generate QR</button>
+  </form>
+  <div id="result"></div>
+
+  <div class="card">
+    <strong>Quick Links:</strong><br><br>
+    <a href="/scanner"><button>📷 Open Scanner</button></a>
+    <a href="/admin"><button>📊 Admin Dashboard</button></a>
+  </div>
+</div>
+
+<script>
+document.getElementById('regForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const regId=document.getElementById('regId').value.trim();
+
+  const res = await fetch('/api/register',{
+    method:'POST', headers:{'Content-Type':'application/json'}, 
+    body:JSON.stringify({ id:regId||undefined, name, email })
+  });
+  const j = await res.json();
+  const out=document.getElementById('result');
+  if(!j.success){ out.innerHTML=`<div class="warn">Error: ${j.message}</div>`; return; }
+
+  out.innerHTML=`<div class="success">Registered ✅ ID: <b>${j.id}</b></div>
+    <img src="${j.qrDataUrl}" width="200"/>
+    <br><button onclick="downloadQR('${j.qrDataUrl}','${j.id}')">Download QR</button>`;
+});
+
+function downloadQR(url,id){
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`${id}.png`;
+  a.click();
+}
+</script>
+</body>
+</html>
